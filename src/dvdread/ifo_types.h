@@ -551,27 +551,29 @@ typedef struct {
 } ATTRIBUTE_PACKED vts_atrt_t;
 #define VTS_ATRT_SIZE 8U
 
+
+typedef struct {
+  uint8_t it_txt_idcd; /* Item Text Identifier Code */
+  uint8_t zero_1;
+  uint16_t it_txt_sa; /* start address of IT_TXT (string terminated by 0x09) */
+} ATTRIBUTE_PACKED txtdt_srp_t;
+#define TXTDT_SRP_SIZE 4U
+
 /**
- * Text Data. (Incomplete)
+ * Text Data Language Unit Information
  */
 typedef struct {
-  uint32_t last_byte;    /* offsets are relative here */
-  uint16_t offsets[100]; /* == nr_of_srpts + 1 (first is disc title) */
-#if 0
-  uint16_t unknown; /* 0x48 ?? 0x48 words (16bit) info following */
   uint16_t zero_1;
+  uint16_t txtdt_lu_ea; /* Text Data Information end address */
+  uint16_t it_txt_srp_sa_vlm;
+  uint16_t it_txt_srp_sa_tt[99];
 
-  uint8_t type_of_info; /* ?? 01 == disc, 02 == Title, 04 == Title part */
-  uint8_t unknown1;
-  uint8_t unknown2;
-  uint8_t unknown3;
-  uint8_t unknown4; /* ?? allways 0x30 language?, text format? */
-  uint8_t unknown5;
-  uint16_t offset; /* from first */
+  //TXTDI Text Data Information
+  uint16_t nr_of_it_txt_srp;
+  uint16_t zero_2;
 
-  char text[12]; /* ended by 0x09 */
-#endif
-} ATTRIBUTE_PACKED txtdt_t;
+} ATTRIBUTE_PACKED txtdt_lui_t;
+#define TXTDT_LUI_SIZE 208U
 
 /**
  * Text Data Language Unit. (Incomplete)
@@ -581,7 +583,7 @@ typedef struct {
   uint8_t  zero_1;
   uint8_t char_set;      /* 0x00 reserved Unicode, 0x01 ISO 646, 0x10 JIS Roman & JIS Kanji, 0x11 ISO 8859-1, 0x12 Shift JIS Kanji */
   uint32_t txtdt_start_byte;  /* prt, rel start of vmg_txtdt_mgi  */
-  txtdt_t  *txtdt;
+  txtdt_lui_t  *txtdt;
 } ATTRIBUTE_PACKED txtdt_lu_t;
 #define TXTDT_LU_SIZE 8U
 
